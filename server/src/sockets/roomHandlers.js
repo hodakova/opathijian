@@ -13,6 +13,7 @@ export function registerRoomHandlers(io, socket) {
     );
 
     rooms[roomCode] = room;
+    console.log(rooms);
 
     socket.join(roomCode);
 
