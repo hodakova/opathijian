@@ -1,17 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect } from "react";
+import { socket } from "./socket/socket";
 
 function App() {
-  const [count, setCount] = useState(0)
+  useEffect(() => {
+    socket.connect();
+
+    socket.on("connect", () => {
+      console.log("Connected:", socket.id);
+    });
+
+    return () => {
+      socket.off("connect");
+    };
+  }, []);
 
   return (
     <div>
       <h1>Opathijian</h1>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
