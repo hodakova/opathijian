@@ -13,7 +13,6 @@ export function registerRoomHandlers(io, socket) {
     );
 
     rooms[roomCode] = room;
-    console.log(rooms);
 
     socket.join(roomCode);
 
@@ -22,8 +21,28 @@ export function registerRoomHandlers(io, socket) {
       room,
     });
 
-    console.log(
-      `${playerName} created room ${roomCode}`
-    );
+    console.log(`${playerName} created room ${roomCode}`);
+  });
+
+  socket.on("join-room", ({ roomCode, playerName }) => {
+    const room = rooms[roomCode];
+
+    if (!room) {
+      socket.emit("error-message", {message: "Room not found"});
+      return;
+    }
+
+    room.players.push({
+      id: socket.id,
+      name: playerName,
+      hand: [],
+      score: 0,
+    });
+
+    socket.join(roomCode);
+
+    io.to(roomCode).emit("room-updated", room);
+
+    console.log(`${playerName} joined room ${roomCode}`);
   });
 }
