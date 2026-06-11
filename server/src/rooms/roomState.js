@@ -11,7 +11,8 @@ export function createRoom(roomCode, hostId, hostName) {
         id: hostId,
         name: hostName,
         hand: [],
-        score: 0
+        score: 0,
+        readyToPlay: true,
       }
     ],
 
@@ -23,7 +24,9 @@ export function createRoom(roomCode, hostId, hostName) {
 
     deadPiles: [],
 
-    winner: null,
+    winners: [],
+
+    badges: {},
 
     createdAt: Date.now()
   };

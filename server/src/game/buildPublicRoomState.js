@@ -2,6 +2,24 @@ export function buildPublicRoomState(
   room,
   socketId
 ) {
+  const currentPlayerIndex =
+    room.players.findIndex(
+      player =>
+        player.id === socketId
+    );
+
+  const incomingCardIndex =
+    (
+      currentPlayerIndex - 1 +
+      room.players.length
+    ) %
+    room.players.length;
+
+  const incomingCard =
+    room.passingCards[
+      incomingCardIndex
+    ];
+
   return {
     roomCode: room.roomCode,
     status: room.status,
@@ -13,6 +31,7 @@ export function buildPublicRoomState(
       ]?.id,
 
     deckCount: room.deck.length,
+    mustPassCard: room.mustPassCard,
 
     players: room.players.map(
       player => ({
@@ -20,8 +39,13 @@ export function buildPublicRoomState(
         name: player.name,
         score: player.score,
 
-        handCount:
-          player.hand.length,
+        cards: player.hand.map(
+          card => ({
+            raised: card.raised,
+          })
+        ),
+
+        readyToPlay: player.readyToPlay,
       })
     ),
 
@@ -31,9 +55,15 @@ export function buildPublicRoomState(
           player.id === socketId
       )?.hand || [],
 
+    incomingCard,
+
     deadPiles: room.deadPiles,
 
     passingCards:
       room.passingCards,
+
+    winners: room.winners,
+    
+    badges: room.badges,
   };
 }
